@@ -9,5 +9,5 @@ pyglet.resource.path = ["resources"]
 pyglet.resource.reindex()
 
 player_image = pyglet.resource.image("car.png")
-#center_image(player_image)
+background_image = pyglet.resource.image("bg.png")
 
