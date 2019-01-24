@@ -1,12 +1,13 @@
 import pyglet, resource_loader
 from constants import *
+import physics
 
 """
 Answers to that reading paper
 """
 
-class Character:
-    def __init__(self, texture_file, batch):
+class Character(physics.Engine):
+    def __init__(self, texture_file, batch, group=None):
         self.FRICTION = 00.1
         self.GRAVITY  = 03.0
         self.MASS     = 10.0
@@ -21,7 +22,7 @@ class Character:
 
         self.speedX = 0
         self.speedY = 0
-        self.image = pyglet.sprite.Sprite(img=resource_loader.player_image, x=self.x, y=self.y, batch=batch)
+        self.image = pyglet.sprite.Sprite(img=resource_loader.player_image, x=self.x, y=self.y, batch=batch, group=group)
 
     def get_colide_y(self):
         if self.y < 100: #uhh... height
@@ -40,52 +41,40 @@ class Character:
             return True
         return False
 
-    def stop(self):
-        self.forceX = 0
+class Background(physics.Engine):
+    def __init__(self, character, batch, group=None):
+        self.FRICTION = 00.1
+        self.GRAVITY  = 00.0
+        self.MASS     = 10.0
+
+        self.x, self.y = 0, 0
+
+        self.accelY = 0
         self.accelX = 0
+
+        self.forceX = 0
+        self.forceY = 0
+
         self.speedX = 0
+        self.speedY = 0
+        self.character = character
+        self.image = pyglet.sprite.Sprite(img=resource_loader.background_image, x=self.x, y=self.y, batch=batch, group=group)
+        self.image.scale = SCREENHEIGHT // BACKGROUND_HEIGHT
 
-    def apply_forces(self):
-        self.final_forceY = self.forceY - self.GRAVITY
-            
-        self.accelX = self.forceX / self.MASS
-        self.accelY = self.final_forceY / self.MASS
+    def get_colide_negx(self):
+        return False
 
-        collide_negx = not self.get_colide_negx()
-        collide_posx = not self.get_colide_posx()
+    def get_colide_posx(self):
+        return False
 
-        if collide_posx or self.speedX <= 0:
-            self.speedX += self.accelX
-        elif self.speedX >= 0:
-            self.speedX = 0
-            self.x = SCREENWIDTH - PADDING - CHARACTER_WIDTH
+    def get_colide_y(self):
+        return False
 
-        if collide_negx or self.speedX >= 0:
-            self.speedX += self.accelX
-        elif self.speedX <= 0:
-            self.speedX = 0
-            self.x = PADDING
-        
-        if not self.get_colide_y():
-            self.speedY += self.accelY
+    def update(self):
+        if self.character.get_colide_posx() and self.character.forceX > 0:
+                self.forceX = -10.8
+        elif self.character.get_colide_negx() and self.character.forceX < 0:
+                self.forceX = 10.8
         else:
-            self.speedY = 0
-
-        if self.speedX > 0:
-            if self.speedX > self.FRICTION:
-                self.speedX -= self.FRICTION
-            else:
-                self.speedX = 0
-                
-        elif self.speedX < 0:
-            if -self.speedX > self.FRICTION:
-                self.speedX += self.FRICTION
-            else:
-                self.speedX = 0
-
-        self.x += self.speedX
-        self.y += self.speedY
-        
-        self.image.set_position(self.x, self.y)
-    def draw(self):
-        self.image.draw()
+            self.forceX = 0
+        self.apply_forces()
