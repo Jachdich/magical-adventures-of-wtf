@@ -10,7 +10,6 @@ pyglet.resource.reindex()
 
 player_image = pyglet.resource.image("car.png")
 background_image = pyglet.resource.image("bg.png")
+
 with open(os.path.join("level", "level1", "platforms"), "r") as f:
     collisions = json.loads(f.read())
-
-print(collisions)
