@@ -4,12 +4,6 @@ import resource_loader, pyglet
 from objects import Character, Background
 from constants import *
 
-GREEN = (000, 000, 255)
-WHITE = (255, 255, 255)
-main_batch = pyglet.graphics.Batch()
-foreground = pyglet.graphics.OrderedGroup(1)
-background = pyglet.graphics.OrderedGroup(0)
-
 class GameEngine:
     def __init__(self):
         self.player = Character("test", main_batch, foreground)
