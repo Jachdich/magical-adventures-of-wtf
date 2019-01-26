@@ -7,25 +7,32 @@ class Engine:
         self.accelX = self.forceX / self.MASS
         self.accelY = self.final_forceY / self.MASS
 
-        collide_negx = not self.get_colide_negx()
-        collide_posx = not self.get_colide_posx()
+        collide_negx = not self.get_collide_negx()
+        collide_posx = not self.get_collide_posx()
 
-        if collide_posx or self.speedX <= 0:
+        if collide_posx or self.speedX < 0:
             self.speedX += self.accelX
         elif self.speedX >= 0:
             self.speedX = 0
             self.x = SCREENWIDTH - PADDING - CHARACTER_WIDTH
 
-        if collide_negx or self.speedX >= 0:
+        if collide_negx or self.speedX > 0:
             self.speedX += self.accelX
         elif self.speedX <= 0:
             self.speedX = 0
             self.x = PADDING
         
-        if not self.get_colide_y():
+        if not self.get_collide_posy() and self.speedY + self.accelY > 0:
             self.speedY += self.accelY
         else:
             self.speedY = 0
+            self.y = 0
+
+        if not self.get_collide_negy() and self.speedY + self.accelY < 0:
+            self.speedY += self.accelY
+        else:
+            self.speedY = 0
+            self.y = SCREENHEIGHT
 
         if self.speedX > 0:
             if self.speedX > self.FRICTION:

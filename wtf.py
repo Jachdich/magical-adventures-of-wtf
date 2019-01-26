@@ -24,7 +24,6 @@ g = GameEngine()
 key = pyglet.window.key
 
 screen = pyglet.window.Window(SCREENWIDTH, SCREENHEIGHT)
-#pyglet.gl.glClearColor(1, 1, 1, 1)
 
 @screen.event
 def on_draw():
@@ -41,13 +40,16 @@ def on_key_press(symbol, modifiers):
         g.player.forceX = 0.8
 
     if symbol == key.SPACE:
-        g.player.forceY = 15
-        print("mmmMMMMMMMmmmmmm")
+        g.player.forceY = 10
         
 @screen.event
 def on_key_release(symbol, modifiers):
     if symbol == key.LEFT or symbol == key.RIGHT:
         g.player.forceX = 0
-        
-pyglet.clock.schedule_interval(g.draw, 1.0 / 60.0)
-pyglet.app.run()
+
+    if symbol == key.SPACE:
+        g.player.forceY = 0
+
+if __name__ == "__main__":
+    pyglet.clock.schedule_interval(g.draw, 1.0 / 60.0)
+    pyglet.app.run()
