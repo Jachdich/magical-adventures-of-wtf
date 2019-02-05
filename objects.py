@@ -2,9 +2,7 @@ import pyglet, resource_loader
 from constants import *
 import physics
 
-"""
-Answers to that reading paper
-"""
+collisions = resource_loader.collisions
 
 class Character(physics.Engine):
     def __init__(self, texture_file, batch, group=None):
@@ -25,11 +23,13 @@ class Character(physics.Engine):
         self.image = pyglet.sprite.Sprite(img=resource_loader.player_image, x=self.x, y=self.y, batch=batch, group=group)
 
     def get_collide_posy(self):
+        if collisions[self.x, self.y][0] <= 10:
+            print("collisions!")
         if self.y < 100: #uhh... height
             return True
         else:
             return False
-        #add something that checks for other y colisions
+            
     def get_collide_negy(self):
         return False
     
@@ -46,7 +46,7 @@ class Character(physics.Engine):
 class Background(physics.Engine):
     def __init__(self, character, batch, group=None):
         self.FRICTION = 00.1
-        self.GRAVITY  = 00.0
+        self.GRAVITY  = 90.0
         self.MASS     = 10.0
 
         self.x, self.y = 0, 0

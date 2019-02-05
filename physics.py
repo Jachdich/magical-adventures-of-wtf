@@ -30,8 +30,8 @@ class Engine:
 
         if not self.get_collide_negy() and self.speedY + self.accelY < 0:
             self.speedY += self.accelY
-        #else:
-        #    self.speedY = 0
+        else:
+            self.speedY = 0
 
         if self.get_collide_negy() and self.speedY + self.accelY > 0:
             self.y = SCREENHEIGHT
